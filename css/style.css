@@ -1,11 +1,21 @@
+#blog-form input[type="file"] {
+  margin-bottom: 1em;
+}
+.blog-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  vertical-align: middle;
+  object-fit: cover;
+}
 body {
   font-family: 'Segoe UI', 'Meiryo', sans-serif;
   margin: 0;
-  background: #f8f8ff;
+  background: #e6f7ff;
   color: #222;
 }
 header, footer {
-  background: #4b3ca7;
+  background: #38a1db;
   color: #fff;
   padding: 1em 0;
   text-align: center;
@@ -25,7 +35,7 @@ main {
   background: #fff;
   padding: 2em;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(56,161,219,0.08);
 }
 #profile-img {
   width: 160px;
@@ -44,10 +54,10 @@ main {
   margin-bottom: 1em;
   padding: 0.5em;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid #b3e0ff;
 }
 #blog-form button {
-  background: #4b3ca7;
+  background: #38a1db;
   color: #fff;
   border: none;
   padding: 0.7em 2em;
@@ -64,4 +74,16 @@ footer .footer-links a {
 }
 footer form {
   margin: 1em 0;
+}
+#message-form input, #message-form button {
+  border: 1px solid #b3e0ff;
+  border-radius: 4px;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+}
+#message-form button {
+  background: #38a1db;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
