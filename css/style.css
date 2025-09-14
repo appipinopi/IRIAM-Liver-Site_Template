@@ -303,16 +303,3 @@ footer {
   border: none;
   cursor: pointer;
 }
-
-/* 次の配信予定 */
-#next-schedule {
-  text-align: center;
-  background-color: #e0f7ff;
-  border: 2px dashed #007bff;
-  padding: 1.5rem;
-  border-radius: 8px;
-}
-
-.next-schedule-item h3 {
-  margin-bottom: 0.5rem;
-}
