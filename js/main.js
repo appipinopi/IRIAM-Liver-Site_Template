@@ -123,6 +123,33 @@ function setupXTimeline() {
 }
 
 /**
+ * ページトップに戻るボタンをセットアップします。
+ */
+function setupBackToTopButton() {
+  const backToTopButton = document.createElement('button');
+  backToTopButton.id = 'back-to-top';
+  backToTopButton.textContent = '▲';
+  document.body.appendChild(backToTopButton);
+
+  // ある程度スクロールされたらボタンを表示
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      backToTopButton.style.display = 'block';
+    } else {
+      backToTopButton.style.display = 'none';
+    }
+  });
+
+  // ボタンクリックでトップにスクロール
+  backToTopButton.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+}
+
+/**
  * ページの読み込みが完了したら各機能を初期化する
  */
 document.addEventListener('DOMContentLoaded', () => {
@@ -130,4 +157,5 @@ document.addEventListener('DOMContentLoaded', () => {
   setupFooter();
   setupBlog();
   setupXTimeline();
+  setupBackToTopButton();
 });
