@@ -7,6 +7,7 @@ function setupHeader() {
       <a href="index.html">HOME</a>
       <a href="event.html">EVENT</a>
       <a href="blog.html">BLOG</a>
+      <a href="badge-earners.html">BADGE</a>
       <a href="blog-tool.html">BLOG TOOL</a>
     </nav>
   `;
@@ -74,8 +75,13 @@ function setupFooter() {
  * ブログ記事を `blog-posts.json` から読み込んで表示します。
  */
 async function setupBlog() {
+  const ITEMS_PER_PAGE = 5;
+  let currentPage = 1;
+
   const blogList = document.getElementById('blog-list');
   if (!blogList) return;
+  const paginationContainer = document.getElementById('blog-pagination');
+  if (!blogList || !paginationContainer) return;
 
   try {
     const response = await fetch('js/blog-posts.json');
@@ -83,8 +89,10 @@ async function setupBlog() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const blogs = await response.json();
+    const allPosts = await response.json();
 
     blogList.innerHTML = blogs.map(post => `
+    /* blogList.innerHTML = blogs.map(post => `
       <div class="blog-post">
         ${post.icon ? `<img src="${post.icon}" alt="icon" class="blog-icon">` : ''}
         <div class="blog-post-content">
@@ -94,9 +102,207 @@ async function setupBlog() {
         </div>
       </div>`
     ).join('');
+    */
+    const renderBlog = (filterTag = '', page = 1) => {
+      currentPage = page;
+      paginationContainer.innerHTML = ''; // ページネーションをクリア
+
+      const filteredBlogs = filterTag
+        ? allPosts.filter(post => post.tags && post.tags.includes(filterTag))
+        : allPosts;
+
+      const totalPages = Math.ceil(filteredBlogs.length / ITEMS_PER_PAGE);
+      const startIndex = (page - 1) * ITEMS_PER_PAGE;
+      const endIndex = startIndex + ITEMS_PER_PAGE;
+      const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
+
+      if (paginatedBlogs.length === 0) {
+        blogList.innerHTML = '<p>表示する記事がありません。</p>';
+        return;
+      }
+
+      blogList.innerHTML = paginatedBlogs.map(post => `
+        <article class="blog-post">
+          ${post.icon ? `<img src="${post.icon}" alt="icon" class="blog-icon">` : ''}
+          <div class="blog-post-content">
+            <h3>${post.title}</h3>
+            <small>${post.date}</small>
+            ${post.tags && post.tags.length > 0 ? `
+              <div class="blog-tags">
+                ${post.tags.map(tag => `<span class="tag" data-tag="${tag}">${tag}</span>`).join('')}
+              </div>
+            ` : ''}
+            <p>${post.content}</p>
+          </div>
+        </article>`
+      ).join('');
+
+      // ページネーションを描画
+      if (totalPages > 1) {
+        for (let i = 1; i <= totalPages; i++) {
+          const pageButton = document.createElement('button');
+          pageButton.textContent = i;
+          if (i === currentPage) {
+            pageButton.classList.add('active');
+          }
+          pageButton.addEventListener('click', () => {
+            const activeTag = document.querySelector('.blog-tags .tag.active');
+            renderBlog(activeTag ? activeTag.dataset.tag : '', i);
+          });
+          paginationContainer.appendChild(pageButton);
+        }
+      }
+
+      // タグにクリックイベントを設定
+      document.querySelectorAll('.blog-tags .tag').forEach(tagElement => {
+        tagElement.addEventListener('click', (e) => {
+          const clickedTag = e.target.dataset.tag;
+          // クリックされたタグをアクティブにする
+          document.querySelectorAll('#blog-list .tag').forEach(el => {
+            el.classList.toggle('active', el.dataset.tag === clickedTag && !el.classList.contains('active'));
+          });
+          // activeなタグがあればそれで絞り込み、なければ全表示
+          const activeTag = document.querySelector('#blog-list .tag.active');
+          renderBlog(activeTag ? activeTag.dataset.tag : '');
+        });
+      });
+    };
+
+    renderBlog(); // 初期表示
   } catch (error) {
     console.error("ブログ記事の読み込みに失敗しました:", error);
     blogList.innerHTML = "<p>ブログ記事の読み込みに失敗しました。管理者にお問い合わせください。</p>";
+  }
+}
+
+/**
+ * イベントを `js/events.json` から読み込んで表示し、検索機能を提供します。
+ */
+async function setupEvents() {
+  const ITEMS_PER_PAGE = 5;
+  let currentPage = 1;
+
+  const eventList = document.getElementById('event-list');
+  const searchInput = document.getElementById('event-search-input');
+  const paginationContainer = document.getElementById('event-pagination');
+  if (!eventList || !searchInput || !paginationContainer) return;
+
+  try {
+    const response = await fetch('js/events.json');
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const allEvents = await response.json();
+
+    const renderEvents = (filter = '', filterTag = '', page = 1) => {
+      currentPage = page;
+      paginationContainer.innerHTML = ''; // ページネーションをクリア
+      let filteredEvents = allEvents;
+
+      // タグで絞り込み
+      if (filterTag) {
+        // TODO: タグの active class の管理
+        filteredEvents = filteredEvents.filter(event => event.tags && event.tags.includes(filterTag));
+      }
+
+      // 検索ボックスのテキストで絞り込み
+      if (filter) {
+        filteredEvents = filteredEvents.filter(event =>
+          event.title.includes(filter) || event.description.includes(filter)
+        );
+      }
+
+      filteredEvents.sort((a, b) => new Date(b.date) - new Date(a.date)); // 日付の降順でソート
+
+      const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE);
+      const startIndex = (page - 1) * ITEMS_PER_PAGE;
+      const endIndex = startIndex + ITEMS_PER_PAGE;
+      const paginatedEvents = filteredEvents.slice(startIndex, endIndex);
+
+      if (paginatedEvents.length === 0) {
+        eventList.innerHTML = '<p>表示するイベントがありません。</p>';
+        return;
+      }
+      eventList.innerHTML = paginatedEvents.map(event => `
+        <div class="event-item">
+          <h3>${event.title}</h3>
+          <small>${event.date}</small>
+          ${event.tags && event.tags.length > 0 ? `
+            <div class="event-tags">
+              ${event.tags.map(tag => `<span class="tag" data-tag="${tag}">${tag}</span>`).join('')}
+            </div>
+          ` : ''}
+          <p>${event.description}</p>
+        </div>
+      `).join('');
+
+      // ページネーションを描画
+      if (totalPages > 1) {
+        for (let i = 1; i <= totalPages; i++) {
+          const pageButton = document.createElement('button');
+          pageButton.textContent = i;
+          if (i === currentPage) {
+            pageButton.classList.add('active');
+          }
+          pageButton.addEventListener('click', () => {
+            // TODO: タグの active 状態を維持する
+            renderEvents(searchInput.value, '', i);
+          });
+          paginationContainer.appendChild(pageButton);
+        }
+      }
+
+      // タグにクリックイベントを設定
+      document.querySelectorAll('#event-list .tag').forEach(tagElement => {
+        tagElement.addEventListener('click', (e) => {
+          const clickedTag = e.target.dataset.tag;
+          renderEvents(searchInput.value, clickedTag, 1); // タグクリック時は1ページ目から表示
+        });
+      });
+    };
+
+    renderEvents(); // 初期表示
+    searchInput.addEventListener('input', (e) => renderEvents(e.target.value, '', 1)); // 検索時はタグフィルターをリセットし1ページ目から
+
+  } catch (error) {
+    console.error("イベントの読み込みに失敗しました:", error);
+    eventList.innerHTML = "<p>イベントの読み込みに失敗しました。管理者にお問い合わせください。</p>";
+  }
+}
+
+/**
+ * バッジ獲得者を `js/badge-earners.json` から読み込んで表示し、検索機能を提供します。
+ */
+async function setupBadgeEarners() {
+  const earnersList = document.getElementById('earners-list');
+  const searchInput = document.getElementById('earner-search-input');
+  if (!earnersList || !searchInput) return;
+
+  try {
+    const response = await fetch('js/badge-earners.json');
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const earners = await response.json();
+
+    const renderEarners = (filter = '') => {
+      const lowerCaseFilter = filter.toLowerCase();
+      const filteredEarners = earners.filter(earner =>
+        earner.name.toLowerCase().includes(lowerCaseFilter) || earner.badge.toLowerCase().includes(lowerCaseFilter)
+      ).sort((a, b) => new Date(b.date) - new Date(a.date)); // 日付の降順でソート
+      earnersList.innerHTML = filteredEarners.map(earner => `
+        <div class="earner-item">
+          ${earner.icon ? `<img src="${earner.icon}" alt="icon" class="earner-icon">` : ''}
+          <div class="earner-info">
+            <h4>${earner.name}</h4>
+            <p>獲得バッジ: ${earner.badge} (${earner.date})</p>
+          </div>
+        </div>
+      `).join('');
+    };
+
+    renderEarners(); // 初期表示
+    searchInput.addEventListener('input', (e) => renderEarners(e.target.value));
+
+  } catch (error) {
+    console.error("バッジ獲得者の読み込みに失敗しました:", error);
+    earnersList.innerHTML = "<p>バッジ獲得者の読み込みに失敗しました。管理者にお問い合わせください。</p>";
   }
 }
 
@@ -129,5 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupHeader();
   setupFooter();
   setupBlog();
+  setupEvents();
+  setupBadgeEarners();
   setupXTimeline();
 });
