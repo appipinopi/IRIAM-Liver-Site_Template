@@ -1,4 +1,15 @@
 /**
+ * サイト全体の設定
+ * ご自身の情報に合わせて、以下の値を書き換えてください。
+ */
+const siteConfig = {
+  formspreeURL: "https://formspree.io/f/xandkgne", // FormspreeのエンドポイントURL
+  youtubeURL: "https://www.youtube.com/@your_account", // YouTubeチャンネルのURL
+  xURL: "https://x.com/your_account", // X(旧Twitter)のプロフィールURL
+  xAccount: "appipinopi", // XアカウントのID (@は不要)
+};
+
+/**
  * 共通ヘッダーを挿入します。
  */
 function setupHeader() {
@@ -29,14 +40,8 @@ function setupFooter() {
   const footerElement = document.getElementById('footer');
   if (!footerElement) return;
 
-  // ↓↓↓ ご自身のFormspreeのエンドポイントURLに書き換えてください ↓↓↓
-  const formspreeURL = "https://formspree.io/f/xandkgne";
-  // ↓↓↓ ご自身のYouTubeとX(Twitter)のURLに書き換えてください ↓↓↓
-  const youtubeURL = "https://www.youtube.com/@your_account";
-  const xURL = "https://x.com/your_account";
-
   const footerHTML = `
-    <form id="message-form" action="${formspreeURL}" method="POST">
+    <form id="message-form" action="${siteConfig.formspreeURL}" method="POST">
       <input type="text" name="message" id="message-input" placeholder="応援メッセージ・依頼内容" required>
       <input type="email" name="email" id="email-input" placeholder="メールアドレス" required>
       <button type="submit">送信</button>
@@ -45,10 +50,9 @@ function setupFooter() {
       // ↓↓↓コード書き換えないでください↓↓↓
       <a href="https://github.com/appipinopi/IRIAM-Liver-Site_Template" target="_blank">ソースコード</a>
       // ↑↑↑コード書き換えないでください↑↑↑
-      // ↓↓↓コード書き換えてください↓↓↓
       <a href="https://web.iriam.com/" target="_blank">IRIAM</a> |
-      <a href="${youtubeURL}" target="_blank">YouTube</a> |
-      <a href="${xURL}" target="_blank">X</a>
+      <a href="${siteConfig.youtubeURL}" target="_blank">YouTube</a> |
+      <a href="${siteConfig.xURL}" target="_blank">X</a>
     </div>
   `;
   footerElement.innerHTML = footerHTML;
@@ -59,7 +63,7 @@ function setupFooter() {
     messageForm.addEventListener('submit', (e) => {
       // デフォルトの送信を少し遅らせて、非同期送信が完了するのを待つ
       e.preventDefault();
-      fetch(formspreeURL, {
+      fetch(siteConfig.formspreeURL, {
           method: 'POST',
           body: new FormData(messageForm),
           headers: {
@@ -116,18 +120,19 @@ function setupXTimeline() {
   const timelineContainer = document.getElementById('x-timeline');
   if (!timelineContainer) return;
 
-  // ↓↓↓ ご自身のXアカウントIDに置き換えてください（@は不要） ↓↓↓
-  const xAccount = "appipinopi";
-
-  timelineContainer.innerHTML = `<a class="twitter-timeline" data-height="400" href="https://x.com/${xAccount}">Tweets by ${xAccount}</a>`;
+  timelineContainer.innerHTML = `<a class="twitter-timeline" data-height="400" href="https://x.com/${siteConfig.xAccount}">Tweets by ${siteConfig.xAccount}</a>`;
 
   // Twitterのウィジェットスクリプトが既に読み込まれていないか確認
-  if (!window.twttr) {
+  if (window.twttr && window.twttr.widgets) {
+    window.twttr.widgets.load(timelineContainer);
+  } else if (!document.querySelector('script[src="https://platform.twitter.com/widgets.js"]')) {
     const script = document.createElement('script');
     script.async = true;
     script.src = "https://platform.twitter.com/widgets.js";
     script.charset = "utf-8";
     document.body.appendChild(script);
+    // スクリプト読み込み後にタイムラインを初期化
+    script.onload = () => window.twttr.widgets.load(timelineContainer);
   }
 }
 
@@ -138,28 +143,20 @@ function setupThemeSwitcher() {
   const themeSwitch = document.getElementById('checkbox');
   if (!themeSwitch) return;
 
-  const currentTheme = localStorage.getItem('theme');
-
   const setTheme = (theme) => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
-    if (theme === 'dark') {
-      themeSwitch.checked = true;
-    } else {
-      themeSwitch.checked = false;
-    }
+    themeSwitch.checked = theme === 'dark';
   };
 
+  // ページの読み込み時に保存されたテーマを適用
+  const currentTheme = localStorage.getItem('theme') || 'light';
   if (currentTheme) {
     setTheme(currentTheme);
   }
 
   themeSwitch.addEventListener('change', (e) => {
-    if (e.target.checked) {
-      setTheme('dark');
-    } else {
-      setTheme('light');
-    }
+    setTheme(e.target.checked ? 'dark' : 'light');
   });
 }
 
