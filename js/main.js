@@ -42,7 +42,10 @@ function setupFooter() {
       <button type="submit">送信</button>
     </form>
     <div class="footer-links">
-      <a href="https://github.com/appipinopi/IRIAM-Liver-Site_Template" target="_blank">ソースコード</a> |
+      // ↓↓↓コード書き換えないでください↓↓↓
+      <a href="https://github.com/appipinopi/IRIAM-Liver-Site_Template" target="_blank">ソースコード</a>
+      // ↑↑↑コード書き換えないでください↑↑↑
+      // ↓↓↓コード書き換えてください↓↓↓
       <a href="https://web.iriam.com/" target="_blank">IRIAM</a> |
       <a href="${youtubeURL}" target="_blank">YouTube</a> |
       <a href="${xURL}" target="_blank">X</a>
