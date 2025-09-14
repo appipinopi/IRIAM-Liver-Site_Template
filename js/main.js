@@ -29,6 +29,24 @@ const blogPosts = [
 ];
 
 /**
+ * イベント履歴のデータ
+ * ここにイベントの履歴を追加・編集してください。
+ * name: イベント名
+ * rank: 順位 (例: "1位", "B1-B3 1位")
+ * reward: 報酬 (不要な場合は '')
+ * comment: 一言コメント (不要な場合は '')
+ */
+const eventData = [
+  {
+    name: "新人ライバーの進撃",
+    rank: "1位",
+    reward: "オリジナル背景",
+    comment: "たくさんの応援ありがとうございました！"
+  },
+  // 他のイベントを追加する場合は、この下に同じ形式で追加します。
+];
+
+/**
  * 共通ヘッダーを挿入します。
  */
 function setupHeader() {
@@ -127,6 +145,30 @@ function setupBlog() {
 }
 
 /**
+ * イベント履歴をデータから読み込んで表示します。
+ */
+function setupEvents() {
+  const eventList = document.getElementById('event-list');
+  if (!eventList) return;
+
+  if (eventData.length === 0) {
+    eventList.innerHTML = "<p>まだイベント履歴がありません。</p>";
+    return;
+  }
+
+  eventList.innerHTML = eventData.map(event => `
+    <div class="event-item">
+      <h3>${event.name}</h3>
+      <ul>
+        <li><strong>結果:</strong> ${event.rank}</li>
+        ${event.reward ? `<li><strong>特典:</strong> ${event.reward}</li>` : ''}
+        ${event.comment ? `<li><strong>コメント:</strong> ${event.comment}</li>` : ''}
+      </ul>
+    </div>
+  `).join('');
+}
+
+/**
  * X (旧Twitter) のタイムラインを埋め込みます。
  */
 function setupXTimeline() {
@@ -180,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupHeader();
   setupFooter();
   setupBlog();
+  setupEvents();
   setupXTimeline();
   setupThemeSwitcher();
 });
