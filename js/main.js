@@ -8,6 +8,12 @@ function setupHeader() {
       <a href="event.html">EVENT</a>
       <a href="blog.html">BLOG</a>
       <a href="blog-tool.html">BLOG TOOL</a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" />
+          <div class="slider"></div>
+        </label>
+      </div>
     </nav>
   `;
   const headerElement = document.getElementById('header');
@@ -123,6 +129,38 @@ function setupXTimeline() {
 }
 
 /**
+ * テーマ（ライト/ダークモード）の切り替え機能をセットアップします。
+ */
+function setupThemeSwitcher() {
+  const themeSwitch = document.getElementById('checkbox');
+  if (!themeSwitch) return;
+
+  const currentTheme = localStorage.getItem('theme');
+
+  const setTheme = (theme) => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    if (theme === 'dark') {
+      themeSwitch.checked = true;
+    } else {
+      themeSwitch.checked = false;
+    }
+  };
+
+  if (currentTheme) {
+    setTheme(currentTheme);
+  }
+
+  themeSwitch.addEventListener('change', (e) => {
+    if (e.target.checked) {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+  });
+}
+
+/**
  * ページの読み込みが完了したら各機能を初期化する
  */
 document.addEventListener('DOMContentLoaded', () => {
@@ -130,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupFooter();
   setupBlog();
   setupXTimeline();
+  setupThemeSwitcher();
 });
 
 /**

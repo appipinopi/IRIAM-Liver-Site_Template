@@ -1,5 +1,30 @@
-#blog-form input[type="file"] {
-  margin-bottom: 1em;
+/* --- Color Variables --- */
+:root {
+  --bg-color: #f4f7f6;
+  --text-color: #333;
+  --card-bg-color: #fff;
+  --header-bg-color: #fff;
+  --header-text-color: #555;
+  --footer-bg-color: #87CEEB;
+  --footer-text-color: #fff;
+  --primary-color: #007bff;
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --loader-bg: #fff;
+  --loader-ring: #f3f3f3;
+  --loader-spinner: #3498db;
+}
+
+[data-theme="dark"] {
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --card-bg-color: #1e1e1e;
+  --header-bg-color: #1e1e1e;
+  --header-text-color: #e0e0e0;
+  --primary-color: #3498db;
+  --border-color: #333;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --loader-bg: #121212;
 }
 .blog-icon {
   width: 48px;
@@ -11,8 +36,9 @@
 body {
   font-family: 'Segoe UI', 'Meiryo', sans-serif;
   margin: 0;
-  background: #e6f7ff;
-  color: #222;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
 }
 header, footer {
   background: #38a1db;
@@ -32,10 +58,10 @@ header nav a:hover {
 main {
   max-width: 800px;
   margin: 2em auto;
-  background: #fff;
+  background-color: var(--card-bg-color);
   padding: 2em;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(56,161,219,0.08);
+  box-shadow: 0 2px 8px var(--shadow-color);
 }
 #profile-img {
   width: 160px;
@@ -84,21 +110,21 @@ body, h1, h2, h3, p, ul, li, a, form, input, button, textarea, select {
 }
 
 body {
-  background-color: #f4f4f9;
-  color: #333;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   line-height: 1.6;
 }
 
 /* ヘッダー */
 header {
-  background-color: #007bff83;
+  background-color: var(--header-bg-color);
   padding: 1rem 2rem;
-  border-bottom: 1px solid #ddd;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 nav a {
-  color: #555;
+  color: var(--header-text-color);
   text-decoration: none;
   margin-right: 1.5rem;
   font-weight: bold;
@@ -106,7 +132,7 @@ nav a {
 }
 
 nav a:hover {
-  color: #007bff;
+  color: var(--primary-color);
 }
 
 /* メインコンテンツ */
@@ -117,17 +143,17 @@ main {
 }
 
 section {
-  background-color: #fff;
+  background-color: var(--card-bg-color);
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px var(--shadow-color);
   margin-bottom: 2rem;
 }
 
 section h1, section h2 {
   margin-bottom: 1.5rem;
-  color: #333;
-  border-bottom: 2px solid #007bff;
+  color: var(--text-color);
+  border-bottom: 2px solid var(--primary-color);
   padding-bottom: 0.5rem;
 }
 
@@ -146,7 +172,7 @@ section h1, section h2 {
 
 .form-group label {
   font-weight: bold;
-  color: #555;
+  color: var(--text-color);
 }
 
 .form-group input[type="text"],
@@ -157,18 +183,20 @@ section h1, section h2 {
 .form-group textarea {
   width: 100%;
   padding: 0.8rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 25%, transparent);
 }
 
 #mode-selector {
@@ -199,8 +227,8 @@ section h1, section h2 {
 
 #json-output {
   width: 100%;
-  background-color: #e9ecef;
-  border: 1px solid #ccc;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 1rem;
   font-family: monospace;
@@ -211,7 +239,7 @@ section h1, section h2 {
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 4px;
-  background-color: #007bff;
+  background-color: var(--primary-color);
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -225,8 +253,8 @@ section h1, section h2 {
 footer {
   text-align: center;
   padding: 2rem;
-  background-color: #87CEEB;
-  border-top: 1px solid #ddd;
+  background-color: var(--footer-bg-color);
+  border-top: 1px solid var(--border-color);
   margin-top: 2rem;
 }
 
@@ -237,23 +265,23 @@ footer {
 #message-form input, #message-form button {
   padding: 0.8rem;
   margin: 0.3rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
 }
 
 #message-form button {
-  background-color: #007bff;
+  background-color: var(--primary-color);
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 #message-form button:hover {
-  background-color: #0056b3;
+  background-color: color-mix(in srgb, var(--primary-color) 85%, black);
 }
 
 .footer-links a {
-  color: #555;
+  color: var(--footer-text-color);
   text-decoration: none;
   margin: 0 0.5rem;
 }
@@ -264,7 +292,7 @@ footer {
 
 /* ブログ記事 */
 .blog-post {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   padding: 1.5rem 0;
   display: flex;
   align-items: flex-start;
@@ -287,14 +315,14 @@ footer {
 }
 
 .blog-post-content small {
-  color: #777;
+  color: color-mix(in srgb, var(--text-color) 60%, transparent);
   margin-bottom: 0.5rem;
   display: block;
 }
 
 /* 個別記事ページ */
 #post-container h1 {
-  border-bottom: 2px solid #007bff;
+  border-bottom: 2px solid var(--primary-color);
   padding-bottom: 0.5rem;
 }
 
@@ -321,7 +349,7 @@ footer {
   height: 100%;
   top: 0;
   left: 0;
-  background: #fff;
+  background: var(--loader-bg);
   z-index: 9999;
   display: flex;
   justify-content: center;
@@ -329,8 +357,8 @@ footer {
 }
 
 .loader {
-  border: 8px solid #f3f3f3; /* Light grey */
-  border-top: 8px solid #3498db; /* Blue */
+  border: 8px solid var(--loader-ring);
+  border-top: 8px solid var(--loader-spinner);
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -340,4 +368,54 @@ footer {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* --- Theme Toggle Switch --- */
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-switch {
+  display: inline-block;
+  height: 24px;
+  position: relative;
+  width: 48px;
+}
+
+.theme-switch input {
+  display:none;
+}
+
+.slider {
+  background-color: #ccc;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  background-color: #fff;
+  bottom: 4px;
+  content: "";
+  height: 16px;
+  left: 4px;
+  position: absolute;
+  transition: .4s;
+  width: 16px;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
 }
