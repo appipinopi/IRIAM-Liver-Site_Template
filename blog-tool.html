@@ -36,5 +36,40 @@
   </main>
   <footer id="footer"></footer>
   <script src="js/main.js"></script>
+  <script>
+    document.getElementById('blog-creator-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const title = document.getElementById('creator-title').value;
+      const icon = document.getElementById('creator-icon').value;
+      const content = document.getElementById('creator-content').value.replace(/\n/g, '<br>');
+      
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+
+      const blogPost = {
+        title: title,
+        date: formattedDate,
+        content: content,
+        icon: icon
+      };
+
+      const jsonString = JSON.stringify(blogPost, null, 2) + ',';
+      const outputTextarea = document.getElementById('json-output');
+      outputTextarea.value = jsonString;
+
+      document.getElementById('json-output-container').style.display = 'block';
+    });
+
+    document.getElementById('copy-json-btn').addEventListener('click', function() {
+      const outputTextarea = document.getElementById('json-output');
+      outputTextarea.select();
+      document.execCommand('copy');
+      alert('JSONコードをコピーしました！');
+    });
+  </script>
 </body>
 </html>
