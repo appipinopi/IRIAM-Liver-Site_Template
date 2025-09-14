@@ -131,3 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
   setupBlog();
   setupXTimeline();
 });
+
+/**
+ * ページの全リソースが読み込まれたらローディング画面を非表示にする
+ */
+window.onload = function() {
+  const loader = document.getElementById('loader-bg');
+  if (loader) loader.style.display = 'none';
+};
