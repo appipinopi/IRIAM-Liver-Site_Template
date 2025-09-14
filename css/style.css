@@ -87,3 +87,49 @@ footer form {
   border: none;
   cursor: pointer;
 }
+/* --- Blog Tool Page --- */
+#blog-creator-form label {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: bold;
+}
+#blog-creator-form input, #blog-creator-form textarea {
+  width: 100%;
+  padding: 0.5em;
+  border-radius: 4px;
+  border: 1px solid #b3e0ff;
+  box-sizing: border-box; /* paddingを含めてwidth:100%にする */
+}
+#json-output-container {
+  margin-top: 2em;
+}
+#json-output {
+  width: 100%;
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  font-family: monospace;
+}
+.blog-post {
+  display: flex;
+  align-items: flex-start;
+  border-bottom: 1px solid #eee;
+  padding: 1.5em 0;
+}
+.blog-post:last-child {
+  border-bottom: none;
+}
+.blog-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1em;
+  flex-shrink: 0; /* アイコンが縮まないようにする */
+}
+.blog-post-content h3 {
+  margin: 0 0 0.5em 0;
+}
+.blog-post-content p, .blog-post-content small {
+  margin: 0;
+}
