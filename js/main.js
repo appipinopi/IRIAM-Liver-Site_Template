@@ -10,7 +10,7 @@ document.getElementById('header').innerHTML = headerHTML;
 
 // 共通フッター（Formspree対応）
 const footerHTML = `
-  <form id="message-form" action="https://formspree.io/f/xxxxxxxx" method="POST">
+  <form id="message-form" action="https://formspree.io/f/xandkgne" method="POST">
     <input type="text" name="message" id="message-input" placeholder="応援メッセージ・依頼内容" required>
     <input type="email" name="email" id="email-input" placeholder="メールアドレス" required>
     <button type="submit">送信</button>
