@@ -47,6 +47,41 @@ const eventData = [
 ];
 
 /**
+ * サイトのデザイン設定
+ * ここの値を変更すると、サイト全体の色やフォントが変わります。
+ * Google Fontsを使いたい場合は、fontFamilyにフォント名、googleFontURLにURLを指定してください。
+ */
+const designConfig = {
+  // 基本のフォント設定
+  fontFamily: "'Helvetica Neue', Arial, sans-serif", // フォントファミリー
+  googleFontURL: "", // Google FontsのURL (例: "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap")
+
+  // ライトモードの色設定
+  light: {
+    '--bg-color': '#f4f7f6',
+    '--text-color': '#333',
+    '--card-bg-color': '#fff',
+    '--header-bg-color': '#fff',
+    '--header-text-color': '#555',
+    '--footer-bg-color': '#87CEEB',
+    '--footer-text-color': '#fff',
+    '--primary-color': '#007bff',
+    '--border-color': '#e0e0e0',
+    '--shadow-color': 'rgba(0, 0, 0, 0.08)',
+  },
+  // ダークモードの色設定
+  dark: {
+    '--bg-color': '#121212',
+    '--text-color': '#e0e0e0',
+    '--card-bg-color': '#1e1e1e',
+    '--header-bg-color': '#1e1e1e',
+    '--primary-color': '#3498db',
+    '--border-color': '#333',
+    '--shadow-color': 'rgba(0, 0, 0, 0.2)',
+  }
+};
+
+/**
  * 共通ヘッダーを挿入します。
  */
 function setupHeader() {
@@ -192,16 +227,46 @@ function setupXTimeline() {
 }
 
 /**
+ * designConfigに基づいてサイトのデザイン（色とフォント）を適用します。
+ */
+function applyDesignConfig() {
+  // Google Fontsの読み込み
+  if (designConfig.googleFontURL) {
+    const link = document.createElement('link');
+    link.href = designConfig.googleFontURL;
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  }
+
+  // フォントファミリーの適用
+  document.documentElement.style.setProperty('--font-family', designConfig.fontFamily);
+
+  // 現在のテーマ（ライト/ダーク）を取得
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  const themeColors = designConfig[currentTheme] || designConfig.light;
+
+  // 色の適用
+  for (const [key, value] of Object.entries(themeColors)) {
+    document.documentElement.style.setProperty(key, value);
+  }
+}
+
+/**
  * テーマ（ライト/ダークモード）の切り替え機能をセットアップします。
  */
 function setupThemeSwitcher() {
   const themeSwitch = document.getElementById('checkbox');
   if (!themeSwitch) return;
-
+  
   const setTheme = (theme) => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
     themeSwitch.checked = theme === 'dark';
+    // テーマ変更時に色を再適用
+    const themeColors = designConfig[theme] || designConfig.light;
+    for (const [key, value] of Object.entries(themeColors)) {
+      document.documentElement.style.setProperty(key, value);
+    }
   };
 
   // ページの読み込み時に保存されたテーマを適用
@@ -219,6 +284,7 @@ function setupThemeSwitcher() {
  * ページの読み込みが完了したら各機能を初期化する
  */
 document.addEventListener('DOMContentLoaded', () => {
+  applyDesignConfig(); // ★最初にデザインを適用
   setupHeader();
   setupFooter();
   setupBlog();

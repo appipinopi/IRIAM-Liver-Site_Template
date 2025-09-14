@@ -1,6 +1,7 @@
 /* --- Color Variables --- */
 :root {
   --bg-color: #f4f7f6;
+  --font-family: 'Segoe UI', 'Meiryo', sans-serif;
   --text-color: #333;
   --card-bg-color: #fff;
   --header-bg-color: #fff;
@@ -34,7 +35,7 @@
   object-fit: cover;
 }
 body {
-  font-family: 'Segoe UI', 'Meiryo', sans-serif;
+  font-family: var(--font-family);
   margin: 0;
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -105,8 +106,8 @@ footer form {
 body, h1, h2, h3, p, ul, li, a, form, input, button, textarea, select {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
+  box-sizing: border-box; 
+  font-family: var(--font-family);
 }
 
 body {
