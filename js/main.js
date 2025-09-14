@@ -11,7 +11,6 @@ document.getElementById('header').innerHTML = headerHTML;
 // 共通フッター（Formspree対応）
 const footerHTML = `
   <form id="message-form" action="https://formspree.io/f/xxxxxxxx" method="POST">
-  <form id="message-form" action="https://formspree.io/f/xandkgne" method="POST">
     <input type="text" name="message" id="message-input" placeholder="応援メッセージ・依頼内容" required>
     <input type="email" name="email" id="email-input" placeholder="メールアドレス" required>
     <button type="submit">送信</button>
@@ -21,8 +20,6 @@ const footerHTML = `
     <a href="https://web.iriam.com/" target="_blank">IRIAM</a> |
     <a href="https://www.youtube.com/" target="_blank">YouTube</a> |
     <a href="https://x.com/" target="_blank">X</a>
-    <a href="https://www.youtube.com/@appipinopi" target="_blank">YouTube</a> |
-    <a href="https://x.com/@appipinopi" target="_blank">X</a>
   </div>
 `;
 document.getElementById('footer').innerHTML = footerHTML;
