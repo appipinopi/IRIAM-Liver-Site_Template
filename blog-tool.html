@@ -20,6 +20,7 @@
           <select id="mode-selector">
             <option value="blog">ブログ</option>
             <option value="event">イベント</option>
+            <option value="event">予定</option>
             <option value="badge">歴代バッチ</option>
           </select>
         </div>
@@ -33,6 +34,12 @@
           <div class="form-group">
             <label for="blog-image">画像URL（任意）</label>
             <input type="url" id="blog-image" placeholder="https://example.com/image.png">
+            <label for="blog-icon">アイコンURL（任意）</label>
+            <input type="text" id="blog-icon" placeholder="例: images/icon.png">
+          </div>
+          <div class="form-group">
+            <label for="blog-tags">タグ（カンマ区切り）</label>
+            <input type="text" id="blog-tags" placeholder="例: お知らせ,雑談">
           </div>
           <div class="form-group">
             <label for="blog-content">文章</label>
@@ -41,18 +48,25 @@
         </div>
 
         <!-- Event Form -->
+        <!-- Schedule (Event) Form -->
         <div id="event-form-fields" style="display: none;">
           <div class="form-group">
             <label for="event-name">イベントの名前</label>
             <input type="text" id="event-name" placeholder="例：新人ライバーの進撃">
+            <label for="event-title">予定のタイトル</label>
+            <input type="text" id="event-title" placeholder="例: 歌枠コラボ">
           </div>
           <div class="form-group">
             <label for="event-rank">順位</label>
             <input type="number" id="event-rank" placeholder="例：1">
+            <label for="event-tags">タグ（カンマ区切り）</label>
+            <input type="text" id="event-tags" placeholder="例: コラボ,歌枠">
           </div>
           <div class="form-group">
             <label for="event-reward">報酬（任意）</label>
             <input type="text" id="event-reward" placeholder="例：オリジナル背景">
+            <label for="event-description">説明</label>
+            <textarea id="event-description" rows="5" placeholder="〇〇さんとのコラボ配信です！"></textarea>
           </div>
           <div class="form-group">
             <label for="event-comment">一言（任意）</label>
@@ -65,6 +79,8 @@
           <div class="form-group">
             <label for="badge-user">ユーザー名</label>
             <input type="text" id="badge-user" placeholder="例：ぴのぴ">
+            <label for="badge-name">ユーザー名</label>
+            <input type="text" id="badge-name" placeholder="例: ぴのぴの">
           </div>
           <div class="form-group">
             <label for="badge-level">獲得バッチ</label>
@@ -75,6 +91,8 @@
               <option value="4">★4</option>
               <option value="5">★5</option>
             </select>
+            <label for="badge-badge">獲得バッジ</label>
+            <input type="text" id="badge-badge" placeholder="例: MVP, 皆勤賞">
           </div>
           <div class="form-group">
             <label for="badge-date">獲得日</label>
@@ -83,6 +101,8 @@
           <div class="form-group">
             <label for="badge-points">月間ポイント（任意）</label>
             <input type="text" id="badge-points" placeholder="例：150,000pt">
+            <label for="badge-icon">アイコンURL（任意）</label>
+            <input type="text" id="badge-icon" placeholder="例: images/default-icon.png">
           </div>
         </div>
 
@@ -127,27 +147,51 @@
       // JSON Generation
       form.addEventListener('submit', (e) => {
         e.preventDefault();
+        outputContainer.style.display = 'none';
         const selectedMode = modeSelector.value;
         let data = { type: selectedMode };
+        let data = {};
+        const today = new Date().toISOString().split('T')[0];
 
         if (selectedMode === 'blog') {
           data.title = document.getElementById('blog-title').value;
           data.image = document.getElementById('blog-image').value;
+          data.date = today;
           data.content = document.getElementById('blog-content').value.replace(/\n/g, '<br>');
           data.date = new Date().toISOString().split('T')[0]; // Add current date
+          data.icon = document.getElementById('blog-icon').value || 'images/icon.png';
+          const tags = document.getElementById('blog-tags').value;
+          data.tags = tags ? tags.split(',').map(tag => tag.trim()) : [];
+
         } else if (selectedMode === 'event') {
           data.name = document.getElementById('event-name').value;
           data.rank = document.getElementById('event-rank').value;
           data.reward = document.getElementById('event-reward').value;
           data.comment = document.getElementById('event-comment').value;
+          data.title = document.getElementById('event-title').value;
+          data.date = today;
+          data.description = document.getElementById('event-description').value;
+          const tags = document.getElementById('event-tags').value;
+          data.tags = tags ? tags.split(',').map(tag => tag.trim()) : [];
+
         } else if (selectedMode === 'badge') {
           data.user = document.getElementById('badge-user').value;
           data.badge = document.getElementById('badge-level').value;
+          data.name = document.getElementById('badge-name').value;
+          data.badge = document.getElementById('badge-badge').value;
           data.date = document.getElementById('badge-date').value;
           data.points = document.getElementById('badge-points').value;
+          data.icon = document.getElementById('badge-icon').value || 'images/default-icon.png';
         }
 
         const jsonString = JSON.stringify(data, null, 2) + ',';
+        // 必須項目が入力されているか簡易チェック
+        if ((selectedMode === 'blog' && !data.title) || (selectedMode === 'event' && !data.title) || (selectedMode === 'badge' && !data.name)) {
+          alert('必須項目を入力してください。');
+          return;
+        }
+
+        const jsonString = JSON.stringify(data, null, 2);
         outputTextarea.value = jsonString;
         outputContainer.style.display = 'block';
       });

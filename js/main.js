@@ -6,7 +6,6 @@ function setupHeader() {
     <nav>
       <a href="index.html">HOME</a>
       <a href="event.html">EVENT</a>
-      <a href="schedule.html">SCHEDULE</a>
       <a href="blog.html">BLOG</a>
       <a href="blog-tool.html">BLOG TOOL</a>
     </nav>
@@ -130,6 +129,5 @@ document.addEventListener('DOMContentLoaded', () => {
   setupHeader();
   setupFooter();
   setupBlog();
-  setupEvents();
   setupXTimeline();
 });
