@@ -303,3 +303,9 @@ footer {
   border: none;
   cursor: pointer;
 }
+
+.copyright {
+  margin-top: 1.5rem;
+  font-size: 0.9em;
+  color: #fff;
+}
