@@ -10,6 +10,25 @@ const siteConfig = {
 };
 
 /**
+ * ブログ記事のデータ
+ * ここに記事を追加・編集してください。
+ * icon: 表示したい画像のパス (例: 'img/icon1.png')。不要な場合は '' または削除。
+ * title: 記事のタイトル
+ * date: 日付
+ * content: 記事の本文。HTMLタグも使えます (例: <br> で改行)。
+ */
+const blogPosts = [
+  {
+    icon: "img/IRIAM-Liver-Site_Template-icon.png",
+    title: "テンプレートへようこそ！",
+    date: "2024-01-01",
+    content: "これはブログ記事のサンプルです。js/main.js ファイルを編集して、ご自身の記事を追加してください。<br>HTMLタグを使って、このように<a href='https://github.com/appipinopi/IRIAM-Liver-Site_Template' target='_blank'>リンク</a>を貼ることもできます。"
+  },
+  // 他の記事を追加する場合は、この下に同じ形式で追加します。
+  // { icon: "...", title: "...", date: "...", content: "..." },
+];
+
+/**
  * 共通ヘッダーを挿入します。
  */
 function setupHeader() {
@@ -86,18 +105,16 @@ function setupFooter() {
 /**
  * ブログ記事を `blog-posts.json` から読み込んで表示します。
  */
-async function setupBlog() {
+function setupBlog() {
   const blogList = document.getElementById('blog-list');
   if (!blogList) return;
 
-  try {
-    const response = await fetch('js/blog-posts.json');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const blogs = await response.json();
+  if (blogPosts.length === 0) {
+    blogList.innerHTML = "<p>まだ記事がありません。</p>";
+    return;
+  }
 
-    blogList.innerHTML = blogs.map(post => `
+  blogList.innerHTML = blogPosts.map(post => `
       <div class="blog-post">
         ${post.icon ? `<img src="${post.icon}" alt="icon" class="blog-icon">` : ''}
         <div class="blog-post-content">
@@ -106,11 +123,7 @@ async function setupBlog() {
           <p>${post.content}</p>
         </div>
       </div>`
-    ).join('');
-  } catch (error) {
-    console.error("ブログ記事の読み込みに失敗しました:", error);
-    blogList.innerHTML = "<p>ブログ記事の読み込みに失敗しました。管理者にお問い合わせください。</p>";
-  }
+  ).join('');
 }
 
 /**
